@@ -10,7 +10,9 @@ wheels/
 .venv
 
 .env
-flows/
+flows/runtime/
 keys/
 documents/
 data/
+config/
+app/tui/
