@@ -17,12 +17,12 @@
 2. Copy documents.example directory and rename to documents
   - These are example injections documents that OpenRAG injests at startup
 
-2. Go to ```docker/``` and run ```docker compose --env-file ../.env up```
+3. Go to ```docker/``` and run ```docker compose --env-file ../.env up```
 
-2. If running for the firs ttime, run ```scripts/bootstrap-ollama.sh <LLM_MODEL> <EMBEDDING_MODEL>```
+4. If running for the firs ttime, run ```scripts/bootstrap-ollama.sh <LLM_MODEL> <EMBEDDING_MODEL>```
   - Note that LLM_MODEL and EMBEDDING_MODEL should match the model names from step 1
 
-3. Go to ```localhost:3000``` and follow steps
+5. Go to ```localhost:3000``` and follow steps
 
 
 # Teardown
