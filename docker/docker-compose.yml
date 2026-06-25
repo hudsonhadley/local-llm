@@ -180,6 +180,17 @@ services:
       # - DEFAULT_FOLDER_NAME=OpenRAG
       - HIDE_GETTING_STARTED_PROGRESS=true
 
+  docling:
+    image: quay.io/docling-project/docling-serve-cpu:latest
+    container_name: docling
+    ports:
+      - "5001:5001"
+    environment:
+      - DOCLING_SERVE_ENABLE_UI=true
+      - DOCLING_SERVE_MAX_SYNC_WAIT=600
+      - UVICORN_WORKERS=1
+    restart: unless-stopped
+
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
