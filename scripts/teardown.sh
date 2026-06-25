@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+
+cd "$(dirname "$0")"
 
 echo "Stopping docker containers and volumes..."
 docker compose -f ../docker/docker-compose.yml down -v
@@ -9,5 +12,8 @@ rm -rf ../config/*
 rm -rf ../keys/*
 rm -rf ../flows/runtime/*
 rm -rf ../documents/*
+
+echo "Copying inject document to documents dir..."
+cp ../documents.example/* ../documents/
 
 echo "Done."
