@@ -19,8 +19,8 @@
 
 3. Go to ```docker/``` and run ```docker compose --env-file ../.env up```
 
-4. If running for the firs ttime, run ```scripts/bootstrap-ollama.sh <LLM_MODEL> <EMBEDDING_MODEL>```
-  - Note that LLM_MODEL and EMBEDDING_MODEL should match the model names from step 1
+4. If running for the first time, run ```scripts/bootstrap-ollama.sh```
+  - This will pull the models set in ```.env``` into the ollama image
 
 5. Go to ```localhost:3000``` and follow steps
 
