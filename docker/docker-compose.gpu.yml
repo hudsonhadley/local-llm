@@ -10,3 +10,14 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+  ollama:
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+          memory: 24G

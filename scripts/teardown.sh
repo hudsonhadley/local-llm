@@ -4,7 +4,7 @@ set -e
 cd "$(dirname "$0")"
 
 echo "Stopping docker containers and volumes..."
-docker compose -f ../docker/docker-compose.yml down -v
+docker compose -f ../docker/docker-compose.yml -f ../docker/docker-compose.gpu.yml --env-file ../.env down -v
 
 echo "Removing persistent data..."
 rm -rf ../data/*

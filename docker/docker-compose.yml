@@ -19,6 +19,8 @@ services:
       retries: 20
       start_period: 60s
     restart: unless-stopped
+    networks:
+      - openrag-network
 
   dashboards:
     image: opensearchproject/opensearch-dashboards:3.0.0
@@ -31,6 +33,8 @@ services:
       OPENSEARCH_PASSWORD: ${OPENSEARCH_PASSWORD}
     ports:
       - "5601:5601"
+    networks:
+      - openrag-network
 
   openrag-backend:
     image: langflowai/openrag-backend:${OPENRAG_VERSION:-latest}
@@ -111,6 +115,8 @@ services:
     # Linux: Docker Engine does not auto-inject host.docker.internal; map it to the host gateway
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - openrag-network
 
   openrag-frontend:
     image: langflowai/openrag-frontend:${OPENRAG_VERSION:-latest}
@@ -121,6 +127,8 @@ services:
       - OPENRAG_BACKEND_HOST=openrag-backend
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
+    networks:
+      - openrag-network
 
   langflow:
     image: langflowai/openrag-langflow:${OPENRAG_VERSION:-latest}
@@ -179,6 +187,8 @@ services:
       - LANGFLOW_FLOWS_PATH=/app/langflow-flows
       # - DEFAULT_FOLDER_NAME=OpenRAG
       - HIDE_GETTING_STARTED_PROGRESS=true
+    networks:
+      - openrag-network
 
   docling:
     image: quay.io/docling-project/docling-serve-cpu:latest
@@ -190,16 +200,29 @@ services:
       - DOCLING_SERVE_MAX_SYNC_WAIT=600
       - UVICORN_WORKERS=1
     restart: unless-stopped
+    networks:
+      - openrag-network
 
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+        reservations:
+          memory: 24G
     ports:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+    networks:
+      - openrag-network
 
 volumes:
   opensearch-data:
   ollama_data:
+
+networks:
+  openrag-network:
