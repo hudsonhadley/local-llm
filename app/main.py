@@ -54,6 +54,18 @@ def _get_or_create_api_key():
     create_resp.raise_for_status()
     return create_resp.json()["api_key"]
 
+def ensure_api_key():
+    # Return the api key if one is set
+    if LANGFLOW_API_KEY:
+        return LANGFLOW_API_KEY
+    if not LANGFLOW_PASS:
+        console.print("[red]Error:[/red] Set LANGFLOW_API_KEY or LANGFLOW_SUPERUSER_PASSWORD")
+        sys.exit(1)
+    
+    # Get/create an api key with the superuser password
+    with console.status("[dim]Authenticating with Langflow...[/dim]"):
+        return _get_or_create_api_key()
+
 def main():
     while True:
         print("Hello I am running")
