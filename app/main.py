@@ -112,8 +112,20 @@ def chat(api_key, csv_content, instruction):
     return ""
 
 def main():
+    console.print(Panel("[bold cyan] CSV Editor[/bold cyan] - type [bold]help[/bold] for commands", expand=False))
+
     api_key = ensure_api_key()
-    
+    csv_content=""
+    current_filename=""
+
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+        with open(path) as fin:
+            csv_content = f.read().strip()
+        current_filename = os.path.basename(path)
+        console.print(f"[green]Loaded[/green] {path}\n")
+        console.print(render_csv(csv_content, title=current_filename))
+
     while True:
         try:
             instruction = Prompt.ask("\n[bold]Instruction[/bold]")
@@ -125,5 +137,40 @@ def main():
 
         if cmd in ("quit", "exit", "q"):
             break
+
+        if cmd == "help":
+            console.print(
+                "   [cyan]show[/cyan]           - re-display current CSV as a table\n"
+                "   [cyan]raw[/cyan]            - print raw CSV text\n"
+                "   [cyan]save <path>[/cyan]    - save current CSV to a file\n"
+                "   [cyan]quit[/cyan]           - exit"
+            )
+            continue
+
+        if cmd == "show":
+            console.print(render_csv(csv_content, title=current_filename or "CSV") if csv_content else "[dim]No CSV loaded yet[/dim]")
+            continue
+
+        if cmd.startswith("save "):
+            path = instruction.strip()[5:].strip()
+            with open(path, "w", newline="") as f:
+                f.write(csv_content)
+            console.print(f"[green]Saved[/green] -> {path}")
+            continue
+        
+        with console.status("[yellow]Thinking...[/yellow]"):
+            try:
+                response = chat(api_key, csv_content, instruction)
+            except Exception as e:
+                console.print(f"[red]Error:[/red] {e}")
+                continue
+        
+        new_csv = extract_csv(response)
+        if new_csv:
+            csv_content = new_csv
+            console.print(render_csv(csv_content, title="Updated CSV"))
+        else:
+            console.print(Panel(response, title="Response"))
+
 if __name__ == '__main__':
     main()
